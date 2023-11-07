@@ -1,8 +1,11 @@
-
-
-
 <?php
-include_once("koneksi.php");
+
+include 'koneksi.php';
+
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +35,7 @@ include_once("koneksi.php");
             $id_dokter = '';
             $tgl_periksa = '';
             $catatan = '';
+            $obat = '';
             if (isset($_GET['id'])) {
                 $ambil = mysqli_query($mysqli, "SELECT * FROM periksa WHERE id='" . $_GET['id'] . "'");
                 while ($row = mysqli_fetch_array($ambil)) {
@@ -39,6 +43,7 @@ include_once("koneksi.php");
                     $id_dokter = $row['id_dokter'];
                     $tgl_periksa = $row['tgl_periksa'];
                     $catatan = $row['catatan'];
+                    $obat = $row['obat'];
                 }
             ?>
                 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
@@ -96,6 +101,11 @@ include_once("koneksi.php");
               <input type="text" class="form-control" name="catatan" id="inputTanggalAkhir" value="<?php echo $catatan?>">
             </div>
 
+            <div class="form-group mx-sm-3 mb-2">
+              <label for="Obat" class="sr-only">Obat</label>
+              <input type="text" class="form-control" name="obat" id="inputTanggalAkhir" value="<?php echo $obat?>">
+            </div>
+
 
             <div class="form-group mx-sm-3 mb-2">
               <button type="submit" class="btn btn-primary rounded-pill px-3" name="simpan">Simpan</button>
@@ -112,6 +122,7 @@ include_once("koneksi.php");
                     <th scope="col">Nama Dokter</th>
                     <th scope="col">Tanggal Periksa</th>
                     <th scope="col">Catatan</th>
+                    <th scope="col">Obat</th>
                     <th scope="col">Aksi</th>
                 </tr>
             </thead>
@@ -130,10 +141,10 @@ include_once("koneksi.php");
                         <td><?php echo $data['nama_dokter'] ?></td>
                         <td><?php echo $data['tgl_periksa'] ?></td>
                         <td><?php echo $data['catatan'] ?></td>
+                        <td><?php echo $data['obat'] ?></td>
                         <td>
                             <a class="btn btn-success rounded-pill px-3" 
-                            href="index.php?page=periksa&id=<?php echo $data['id'] ?>">
-                            Ubah</a>
+                            href="index.php?page=periksa&id=<?php echo $data['id'] ?>">Ubah</a>
                             <a class="btn btn-danger rounded-pill px-3" 
                             href="index.php?page=periksa&id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
                         </td>
@@ -149,16 +160,18 @@ include_once("koneksi.php");
                                                         id_pasien = '" . $_POST['id_pasien'] . "',
                                                         id_dokter = '" . $_POST["id_dokter"] . "',
                                                         tgl_periksa = '" . $_POST['tgl_periksa'] . "',
-                                                        catatan = '" . $_POST['catatan'] . "'
+                                                        catatan = '" . $_POST['catatan'] . "',
+                                                        obat = '" . $_POST['obat'] . "'
                                                         WHERE
                                                         id = '" . $_POST['id'] . "'");
                     } else {
-                        $tambah = mysqli_query($mysqli, "INSERT INTO periksa(id_pasien,id_dokter,tgl_periksa,catatan) 
+                        $tambah = mysqli_query($mysqli, "INSERT INTO periksa(id_pasien,id_dokter,tgl_periksa,catatan,obat) 
                                                         VALUES ( 
                                                             '" . $_POST['id_pasien'] . "',
                                                             '" . $_POST['id_dokter'] . "',
                                                             '" . $_POST['tgl_periksa'] . "',
-                                                            '" . $_POST['catatan'] . "'
+                                                            '" . $_POST['catatan'] . "',
+                                                            '" . $_POST['obat'] . "'
                                                             )");
                     }
 
@@ -180,6 +193,4 @@ include_once("koneksi.php");
 
     </div>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>
